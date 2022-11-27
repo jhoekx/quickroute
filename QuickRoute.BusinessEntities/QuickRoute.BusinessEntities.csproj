@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -10,12 +10,13 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>QuickRoute.BusinessEntities</RootNamespace>
     <AssemblyName>QuickRoute.BusinessEntities</AssemblyName>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <OldToolsVersion>3.5</OldToolsVersion>
     <UpgradeBackupLocation />
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -25,6 +26,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -33,6 +35,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
@@ -41,6 +44,7 @@
     <DebugType>full</DebugType>
     <PlatformTarget>x86</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <OutputPath>bin\x86\Release\</OutputPath>
@@ -49,28 +53,24 @@
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>x86</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ExifWorks, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\ExternalReferences\ExifWorks.dll</HintPath>
+    <Reference Include="Ionic.Zip, Version=1.9.1.8, Culture=neutral, PublicKeyToken=edbe51ad942a3f5c, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ionic.Zip-1.9.1.8.1.9.1.8\lib\Ionic.Zip.dll</HintPath>
     </Reference>
-    <Reference Include="Ionic.Zip, Version=1.7.2.6, Culture=neutral, PublicKeyToken=edbe51ad942a3f5c, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\ExternalReferences\Ionic.Zip.dll</HintPath>
-    </Reference>
-    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\ExternalReferences\log4net.dll</HintPath>
+    <Reference Include="log4net, Version=2.0.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.15\lib\net45\log4net.dll</HintPath>
     </Reference>
     <Reference Include="PowerCollections, Version=1.0.2141.24679, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\ExternalReferences\PowerCollections.dll</HintPath>
+      <HintPath>..\packages\XAct.Wintellect.PowerCollections.0.0.1\lib\net20\PowerCollections.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
@@ -122,24 +122,11 @@
     <Compile Include="Importers\FileFormat.cs" />
     <Compile Include="Importers\FIT\FITImporter.cs" />
     <Compile Include="Importers\FIT\FITUtil.cs" />
-    <Compile Include="Importers\GlobalSat\GH615M\GlobalSatGH615MImporter.cs" />
     <Compile Include="Importers\GPSDevice.cs" />
-    <Compile Include="Importers\JJConnect\RegistratorSE\JJConnectRegistratorSEImporter.cs" />
-    <Compile Include="Importers\Polar\PolarHRMImporter.cs" />
-    <Compile Include="Importers\Navilock\NavilockImporter.cs" />
-    <Compile Include="Importers\Polar\ProTrainer\PolarProTrainerImporter.cs" />
     <Compile Include="Importers\FRWD\FRWDImporter.cs" />
-    <Compile Include="Importers\Garmin\Forerunner\GarminForerunnerUSBImporter.cs" />
     <Compile Include="Importers\GPX\GPX10\gpx1.0.cs" />
     <Compile Include="Importers\GPX\GPXUtil.cs" />
     <Compile Include="Importers\ImportError.cs" />
-    <Compile Include="Importers\Polar\ProTrainer\PersonSessionSelector.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Importers\Polar\ProTrainer\PersonSessionSelector.Designer.cs">
-      <DependentUpon>PersonSessionSelector.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Importers\Polar\ProTrainer\PolarProTrainerUtil.cs" />
     <Compile Include="Importers\QuickRoute\QuickRouteImporter.cs" />
     <Compile Include="Importers\RouteFileFormat.cs" />
     <Compile Include="Importers\SessionSelector.cs">
@@ -148,15 +135,12 @@
     <Compile Include="Importers\SessionSelector.Designer.cs">
       <DependentUpon>SessionSelector.cs</DependentUpon>
     </Compile>
-    <Compile Include="Importers\Garmin\ANTAgent\ANTDevice.cs" />
-    <Compile Include="Importers\Garmin\ANTAgent\GarminANTAgentImporter.cs" />
     <Compile Include="General.cs" />
     <Compile Include="GeneralMatrix.cs" />
     <Compile Include="Gradient.cs" />
     <Compile Include="Graphics.cs" />
     <Compile Include="Handle.cs" />
     <Compile Include="HandleCollection.cs" />
-    <Compile Include="Importers\Garmin\ANTAgent\HistoryItem.cs" />
     <Compile Include="Importers\GPX\GPXImporter.cs" />
     <Compile Include="Importers\IGPSDeviceImporter.cs" />
     <Compile Include="Importers\ImportResult.cs" />
@@ -274,6 +258,7 @@
     <None Include="Importers\GPX\GPX11\gpx1.1.xsx">
       <DependentUpon>gpx1.1.xsd</DependentUpon>
     </None>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -365,30 +350,6 @@
       <DependentUpon>ExportImageSizeSelector.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Importers\Polar\ProTrainer\PersonSessionSelector.de.resx">
-      <DependentUpon>PersonSessionSelector.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Importers\Polar\ProTrainer\PersonSessionSelector.fr.resx">
-      <DependentUpon>PersonSessionSelector.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Importers\Polar\ProTrainer\PersonSessionSelector.no.resx">
-      <DependentUpon>PersonSessionSelector.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Importers\Polar\ProTrainer\PersonSessionSelector.resx">
-      <DependentUpon>PersonSessionSelector.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Importers\Polar\ProTrainer\PersonSessionSelector.ru.resx">
-      <DependentUpon>PersonSessionSelector.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Importers\Polar\ProTrainer\PersonSessionSelector.sv.resx">
-      <DependentUpon>PersonSessionSelector.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="Importers\SessionSelector.da.resx">
       <DependentUpon>SessionSelector.cs</DependentUpon>
     </EmbeddedResource>
@@ -418,17 +379,9 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\GPSDeviceReaders\GarminUSBReader\GarminUSBReader.csproj">
-      <Project>{FFEC4820-9B6B-47E9-8594-B71A52081C1E}</Project>
-      <Name>GarminUSBReader</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\GPSDeviceReaders\GlobalSatGH615MReader\GlobalSatGH615MReader.csproj">
-      <Project>{81633CC3-9C5E-4C93-A9A6-876F6AE40883}</Project>
-      <Name>GlobalSatGH615MReader</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\GPSDeviceReaders\JJConnectRegistratorSEReader\JJConnectRegistratorSEReader.csproj">
-      <Project>{E91D684B-2DD8-4C50-8111-1940BFB427EE}</Project>
-      <Name>JJConnectRegistratorSEReader</Name>
+    <ProjectReference Include="..\ExifWorks\ExifWorks.vbproj">
+      <Project>{8cd3d34c-3a31-47a4-a359-ea2307bce750}</Project>
+      <Name>ExifWorks</Name>
     </ProjectReference>
     <ProjectReference Include="..\QuickRoute.Common\QuickRoute.Common.csproj">
       <Project>{7F93415F-ACEB-4B4F-8E6B-51D0B096F38E}</Project>
@@ -450,11 +403,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Importers\Polar\ProTrainer\PersonSessionSelector.lt.resx">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Importers\SessionSelector.lt.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -470,19 +418,11 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Importers\Polar\ProTrainer\PersonSessionSelector.fi.resx">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Importers\SessionSelector.fi.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Importers\GlobalSat\GH615M\toGPX.xsl" />
-    <Content Include="Importers\GlobalSat\icon.ico" />
-    <Content Include="Importers\GlobalSat\icon.png" />
     <None Include="Web References\WinSplitsWebService\WebServices.disco" />
   </ItemGroup>
   <ItemGroup>
@@ -490,9 +430,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Forms\ExportImageSizeSelector.it.resx" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Importers\Polar\ProTrainer\PersonSessionSelector.it.resx" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Importers\SessionSelector.it.resx" />

@@ -8,8 +8,6 @@ using System.Xml.Serialization;
 using System.IO;
 using QuickRoute.BusinessEntities;
 using QuickRoute.BusinessEntities.Importers.GPX.GPX11;
-using QuickRoute.BusinessEntities.Importers.Polar;
-using QuickRoute.BusinessEntities.Importers.Polar.ProTrainer;
 
 namespace QuickRoute.BusinessEntities.Importers.FIT
 {

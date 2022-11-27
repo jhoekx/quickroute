@@ -7,8 +7,6 @@ using System.Xml.Serialization;
 using System.IO;
 using QuickRoute.BusinessEntities;
 using QuickRoute.BusinessEntities.Importers.GPX.GPX11;
-using QuickRoute.BusinessEntities.Importers.Polar;
-using QuickRoute.BusinessEntities.Importers.Polar.ProTrainer;
 
 namespace QuickRoute.BusinessEntities.Importers.GPX
 {
@@ -119,14 +117,6 @@ namespace QuickRoute.BusinessEntities.Importers.GPX
         gpx10convertedFileName = Path.GetTempFileName();
         GPXUtil.ConvertGPX10ToGPX11(fileName, gpx10convertedFileName);
         fileName = gpx10convertedFileName;
-      }
-
-      // check if the file is an invalid Polar ProTrainer file and correct if necessary
-      if (PolarProTrainerUtil.IsPolarProTrainerGPXFile(fileName))
-      {
-        polarConvertedFileName = Path.GetTempFileName();
-        PolarProTrainerUtil.CorrectPolarProTrainerGPXFile(fileName, polarConvertedFileName);
-        fileName = polarConvertedFileName;
       }
 
       var nfi = new NumberFormatInfo { NumberDecimalSeparator = "." };
@@ -370,17 +360,6 @@ namespace QuickRoute.BusinessEntities.Importers.GPX
       {
         File.Delete(polarConvertedFileName);
         fileName = originalFileName;
-      }
-
-      // import Polar HRM file with same base file name as the gpx file, if existing
-      var extension = new FileInfo(fileName).Extension;
-      if(extension != "") 
-      {
-        string hrmFileName = new FileInfo(fileName).FullName.Replace(extension, ".hrm");
-        if(File.Exists(hrmFileName))
-        {
-          new PolarHRMImporter().AddLapsAndHRData(hrmFileName, importResult);
-        }
       }
 
       if (EndWork != null) EndWork(this, new EventArgs());

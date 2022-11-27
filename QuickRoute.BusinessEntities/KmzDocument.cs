@@ -43,7 +43,7 @@ namespace QuickRoute.BusinessEntities
         KmlDocument kmlDocument = null;
         foreach (var entry in zipFile)
         {
-          if (entry.FileName == entry.LocalFileName && Path.GetExtension(entry.FileName) == ".kml")
+          if (Path.GetExtension(entry.FileName) == ".kml")
           {
             using (var kmlStream = new MemoryStream())
             {

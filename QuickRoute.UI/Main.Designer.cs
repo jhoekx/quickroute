@@ -562,13 +562,6 @@ namespace QuickRoute.UI
       this.tstSeparator4.Name = "tstSeparator4";
       resources.ApplyResources(this.tstSeparator4, "tstSeparator4");
       // 
-      // toolStripOpenInGoogleEarth
-      // 
-      this.toolStripOpenInGoogleEarth.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-      resources.ApplyResources(this.toolStripOpenInGoogleEarth, "toolStripOpenInGoogleEarth");
-      this.toolStripOpenInGoogleEarth.Name = "toolStripOpenInGoogleEarth";
-      this.toolStripOpenInGoogleEarth.Click += new System.EventHandler(this.toolStripOpenInGoogleEarth_Click);
-      // 
       // toolStripPublishMap
       // 
       this.toolStripPublishMap.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -1021,18 +1014,6 @@ namespace QuickRoute.UI
             this.menuToolsAddLapsFromExternalDataSource});
       this.menuTools.Name = "menuTools";
       resources.ApplyResources(this.menuTools, "menuTools");
-      // 
-      // menuToolsOpenInGoogleEarth
-      // 
-      resources.ApplyResources(this.menuToolsOpenInGoogleEarth, "menuToolsOpenInGoogleEarth");
-      this.menuToolsOpenInGoogleEarth.Name = "menuToolsOpenInGoogleEarth";
-      this.menuToolsOpenInGoogleEarth.Click += new System.EventHandler(this.menuToolsOpenInGoogleEarth_Click);
-      // 
-      // menuToolsOpenMultipleFilesInGoogleEarth
-      // 
-      this.menuToolsOpenMultipleFilesInGoogleEarth.Name = "menuToolsOpenMultipleFilesInGoogleEarth";
-      resources.ApplyResources(this.menuToolsOpenMultipleFilesInGoogleEarth, "menuToolsOpenMultipleFilesInGoogleEarth");
-      this.menuToolsOpenMultipleFilesInGoogleEarth.Click += new System.EventHandler(this.menuToolsOpenMultipleFilesInGoogleEarth_Click);
       // 
       // menuToolsPublishMap
       // 

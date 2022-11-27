@@ -13,12 +13,10 @@ using System.Windows.Forms;
 using QuickRoute.BusinessEntities;
 using QuickRoute.BusinessEntities.Actions;
 using QuickRoute.BusinessEntities.Exporters;
-using QuickRoute.BusinessEntities.Importers.Garmin.Forerunner;
 using QuickRoute.BusinessEntities.Numeric;
 using QuickRoute.BusinessEntities.RouteProperties;
 using QuickRoute.Common;
 using QuickRoute.Controls;
-using QuickRoute.GPSDeviceReaders.GarminUSBReader;
 using QuickRoute.UI.Classes;
 using QuickRoute.UI.Forms;
 using System.IO;
@@ -136,42 +134,9 @@ namespace QuickRoute.UI
       CreateMomentaneousInfoPanelBackBuffer();
       //SplashScreen.Close();
 
-      //check for /openInGoogleEarth flag
-      if (Environment.GetCommandLineArgs().Length == 3 && Environment.GetCommandLineArgs()[1].ToLower() == "/openingoogleearth")
-      {
-        OpenInGoogleEarthFromCommandLine(Environment.GetCommandLineArgs()[2]);
-      }
-
-      SetupGarminUSBReader();
-
       startingUpNow = false;
     }
 
-    private void SetupGarminUSBReader()
-    {
-      GarminUSBReader.Instance.CacheDirectory = Path.Combine(CommonUtil.GetApplicationDataPath(), "GarminUSBReaderCache");
-      ReadGarminUSBData();
-    }
-
-    private bool garminUSBLastConnectionState;
-    private void ReadGarminUSBData()
-    {
-      var autoread = ConfigurationManager.AppSettings["autoreadGarminUSBData"];
-      if(autoread != null)
-      {
-        bool b;
-        bool.TryParse(autoread, out b);
-        if(b)
-        {
-          var isConnected = GarminUSBReader.Instance.IsConnected;
-          if (isConnected && !garminUSBLastConnectionState && !GarminUSBReader.Instance.ReadingNow)
-          {
-            GarminUSBReader.Instance.BeginReadData();
-          }
-          garminUSBLastConnectionState = isConnected;
-        }
-      }
-    }
 
     ~Main()
     {
@@ -818,122 +783,6 @@ namespace QuickRoute.UI
                  ScaleCaption = new WaypointAttributeString(wa).Name,
                  ScaleUnit = new WaypointAttributeString(wa).Unit
                };
-    }
-
-    private void OpenInGoogleEarth(string documentFileName, WaypointAttribute? colorCodingAttribute, WaypointAttribute? secondaryColorCodingAttribute, ColorRangeProperties colorRangeProperties)
-    {
-      var document = Document.Open(documentFileName);
-      try
-      {
-        OpenInGoogleEarth(document, colorCodingAttribute, secondaryColorCodingAttribute, colorRangeProperties);
-      }
-      catch (Exception)
-      {
-        MessageBox.Show(Strings.Error_InvalidQuickRouteFile, Strings.OpenInGoogleEarth, MessageBoxButtons.OK,
-                        MessageBoxIcon.Error);
-      }
-    }
-
-
-    private void OpenInGoogleEarth(Document document, WaypointAttribute? colorCodingAttribute, WaypointAttribute? secondaryColorCodingAttribute, ColorRangeProperties colorRangeProperties)
-    {
-      if (document == null) throw new ArgumentNullException("document");
-      // set default values
-      if (!colorCodingAttribute.HasValue) colorCodingAttribute = SelectedColorCodingAttribute;
-      if (colorRangeProperties == null) colorRangeProperties = GetCurrentColorRangeProperties();
-
-      using (var kmlPropertySelector = new KmlPropertySelectorDialog(ApplicationSettings.ExportKmlProperties)
-                                  {
-                                    DialogTitle = Strings.OpenInGoogleEarth
-                                  })
-      {
-        var result = kmlPropertySelector.ShowDialog();
-        if (result == DialogResult.OK)
-        {
-          BeginWork();
-          try
-          {
-            ApplicationSettings.ExportKmlProperties = kmlPropertySelector.Properties;
-            using (var stream = new MemoryStream())
-            {
-              CreateKmz(document, stream, kmlPropertySelector.Properties, colorCodingAttribute.Value, secondaryColorCodingAttribute, 
-                        colorRangeProperties);
-              GoogleEarthUtil.OpenInGoogleEarth(stream);
-              stream.Close();
-            }
-            EndWork();
-          }
-          catch (Exception ex)
-          {
-            EndWork();
-            Util.ShowExceptionMessageBox(Strings.Error_GoogleEarthNotInstalledMessage, ex,
-                                         Strings.Error_GoogleEarthNotInstalledTitle);
-          }
-        }
-      }
-    }
-
-    private void OpenMultipleFilesInGoogleEarth()
-    {
-      var initialFileNames = new List<string>();
-      if (canvas.Document != null && canvas.Document.FileName != null)
-      {
-        initialFileNames.Add(canvas.Document.FileName);
-      }
-
-      using (var dialog = new OpenMultipleFilesInGoogleEarthDialog(initialFileNames, ApplicationSettings.ExportKmlMultipleFileProperties))
-      {
-
-        if (dialog.ShowDialog() == DialogResult.OK)
-        {
-          BeginWork();
-          ApplicationSettings.ExportKmlMultipleFileProperties = dialog.MultipleFileProperties;
-          using (var stream = new MemoryStream())
-          {
-            var downloadedFiles = DownloadFilesToTempDirectory(dialog.FileNames);
-            var localFileNames = new List<string>();
-            foreach (var df in downloadedFiles)
-            {
-              localFileNames.Add(df.LocalFileName);
-            }
-            var exporter = new KmlMultipleFilesExporter(localFileNames, dialog.MultipleFileProperties);
-            if (exporter.Document == null)
-            {
-              MessageBox.Show(Strings.MultipleFileExporterNoValidFiles, Strings.OpenMultipleFilesInGoogleEarth,
-                              MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            else
-            {
-              exporter.Export(stream);
-              var dialogResult = DialogResult.OK;
-              if (exporter.InvalidFileNames.Count > 0)
-              {
-                var invalidFileNames = new List<string>();
-                foreach (var ifn in exporter.InvalidFileNames)
-                {
-                  foreach (var df in downloadedFiles)
-                  {
-                    if (df.LocalFileName == ifn) invalidFileNames.Add(df.FileName);
-                  }
-                }
-
-                dialogResult =
-                  MessageBox.Show(
-                    string.Format(Strings.MultipleFileExporterSomeInvalidFiles,
-                                  string.Join("\n", invalidFileNames.ToArray())), Strings.OpenMultipleFilesInGoogleEarth,
-                    MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
-              }
-              if (dialogResult == DialogResult.OK) GoogleEarthUtil.OpenInGoogleEarth(stream);
-            }
-            // delete temp files
-            foreach (var downloadedFile in downloadedFiles)
-            {
-              if (downloadedFile.IsDownloaded) File.Delete(downloadedFile.LocalFileName);
-            }
-          }
-          EndWork();
-        }
-      }
     }
 
     private List<DownloadedFile> DownloadFilesToTempDirectory(IEnumerable<string> fileNames)
@@ -2225,25 +2074,6 @@ namespace QuickRoute.UI
       UpdateUI();
     }
 
-    private void OpenInGoogleEarthFromCommandLine(string fileName)
-    {
-      var wa = WaypointAttribute.Pace;
-      var sc = new TimeScaleCreator(210, 1200, 10, false);
-      var crp = new ColorRangeProperties
-      {
-        NumericConverter = Util.GetNumericConverterFromWaypointAttribute(wa),
-        ScaleCreator = sc,
-        ScaleCaption = new WaypointAttributeString(wa).Name,
-        ScaleUnit = new WaypointAttributeString(wa).Unit
-      };
-
-      OpenInGoogleEarth(fileName, wa, null, crp);
-      Util.SaveSettings(ApplicationSettings);
-
-      var process = Process.GetCurrentProcess();
-      process.Kill();
-    }
-
     private void HandleDragDrop(DragEventArgs e)
     {
       var manager = new DragDropManager();
@@ -2304,15 +2134,6 @@ namespace QuickRoute.UI
         }
       }
 
-    }
-
-    protected override void WndProc(ref Message message)
-    {
-      if (message.Msg == 0x219 && (int)message.WParam == 0x07)
-      {
-        ReadGarminUSBData();
-      }
-      base.WndProc(ref message);
     }
 
     private void canvas_DocumentChanged(object sender, EventArgs e)
@@ -2770,16 +2591,6 @@ namespace QuickRoute.UI
       PublishMap();
     }
 
-    private void menuToolsOpenInGoogleEarth_Click(object sender, EventArgs e)
-    {
-      OpenInGoogleEarth(canvas.Document, null, null, null);
-    }
-
-    private void menuToolsOpenMultipleFilesInGoogleEarth_Click(object sender, EventArgs e)
-    {
-      OpenMultipleFilesInGoogleEarth();
-    }
-
     private void menuHelpHelp_Click(object sender, EventArgs e)
     {
       Util.ShowHelp();
@@ -2895,11 +2706,6 @@ namespace QuickRoute.UI
         e.Handled = true;
         toolStripZoom.SelectAll();
       }
-    }
-
-    private void toolStripOpenInGoogleEarth_Click(object sender, EventArgs e)
-    {
-      OpenInGoogleEarth(canvas.Document, null, null, null);
     }
 
     private void toolStripPublishMap_Click(object sender, EventArgs e)

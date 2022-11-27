@@ -130,8 +130,8 @@ namespace QuickRoute.UI.Classes
     public static string PathShortener(string path, int length)
     {
       var sb = new StringBuilder();
-      PathCompactPathEx(sb, path, length, 0);
-      return sb.ToString();
+      //PathCompactPathEx(sb, path, length, 0);
+      return path;
     }
 
     public static void InsertIntoRecentDocumentsList(string fileName)
